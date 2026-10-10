@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>lifeonnfilmm</title>
+<meta name="description" content="lifeonnfilmm. Photo and video, shot on 35mm. Nights, streets, strays, shows.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="lifeonnfilmm">
+<meta property="og:description" content="Photo and video, shot on 35mm.">
+<meta property="og:image" content="img/full/01-lighter.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23e0231b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Spray+Paint&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SVG filters: spray edge for display type, static for night mode -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="spray" x="-10%" y="-20%" width="120%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="9"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- boot sequence -->
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot-text">
+    <span class="boot-line">lifeonnfilmm</span>
+    <span class="boot-line boot-play">PLAY <b>&#9654;</b></span>
+  </div>
+  <div class="boot-bar"><i></i></div>
+</div>
+
+<!-- fixed camcorder HUD -->
+<div class="hud" aria-hidden="false">
+  <div class="hud-corner tl"></div><div class="hud-corner tr"></div>
+  <div class="hud-corner bl"></div><div class="hud-corner br"></div>
+
+  <div class="hud-top">
+    <div class="hud-rec"><i class="rec-dot"></i><span>REC</span><span class="hud-dim">SP</span></div>
+    <nav class="hud-nav" aria-label="Sections">
+      <a href="#rolls">rolls</a>
+      <a href="#wall">wall</a>
+      <a href="#archive">archive</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <div class="hud-right">
+      <button class="night-toggle" id="nightToggle" type="button" aria-pressed="false" title="Toggle night mode (N)">
+        <span class="nt-off">NIGHT MODE</span><span class="nt-on">NIGHT MODE ON</span>
+      </button>
+      <span class="battery" aria-hidden="true"><i></i><i></i><i></i><i class="low"></i></span>
+    </div>
+  </div>
+
+  <div class="hud-bottom">
+    <div class="timecode" id="timecode">00:00:00:00</div>
+    <div class="datestamp" id="datestamp">OCT 10 2026 &nbsp;11:42 PM</div>
+  </div>
+</div>
+
+<!-- custom cursor -->
+<div class="cursor" id="cursor" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<!-- flash -->
+<div class="flash" id="flash" aria-hidden="true"></div>
+<!-- film grain, scanlines, vignette -->
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-stage" id="heroStage">
+      <!-- hero frames injected -->
+    </div>
+    <div class="hero-focus" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="hero-copy">
+      <h1 class="brand"><span>lifeonnfilmm</span>
+        <i class="drip d1"></i><i class="drip d2"></i><i class="drip d3"></i>
+      </h1>
+      <p class="hero-sub">photo &amp; video. shot on 35mm. flash always on.</p>
+    </div>
+    <div class="hero-meta" id="heroMeta">
+      <span class="hero-frame">FRAME 01</span>
+      <span class="hero-cap">light it</span>
+    </div>
+    <button class="hero-next" id="heroNext" type="button" aria-label="Next frame">NEXT &#9654;</button>
+    <div class="scroll-hint" aria-hidden="true">scroll</div>
+  </section>
+
+  <!-- ROLLS -->
+  <section class="rolls" id="rolls">
+    <header class="sec-head">
+      <h2 class="sprayed">the rolls</h2>
+      <p>eight rolls, pulled from the archive. drag the strips. tap a frame to play it back.</p>
+    </header>
+    <div id="rollsMount"></div>
+  </section>
+
+  <!-- WALL -->
+  <section class="wall" id="wall">
+    <header class="sec-head sec-head-wall">
+      <h2 class="sprayed">the wall</h2>
+      <p>hold and drag to spray. pick a cap. leave your tag. the links are stickers, peel them.</p>
+    </header>
+
+    <div class="wall-stage" id="wallStage">
+      <div class="bricks" aria-hidden="true"></div>
+      <div class="posters" id="posters"></div>
+
+      <div class="stickers">
+        <a class="sticker s-ig" href="#" data-social="instagram" rel="me noopener" target="_blank">
+          <span class="sticker-top">hello my name is</span>
+          <span class="sticker-name">instagram</span>
+        </a>
+        <a class="sticker s-x" href="#" data-social="x" rel="me noopener" target="_blank">
+          <span class="sticker-top">hello my name is</span>
+          <span class="sticker-name">x</span>
+        </a>
+        <a class="sticker s-yt" href="#" data-social="youtube" rel="me noopener" target="_blank">
+          <span class="sticker-top">hello my name is</span>
+          <span class="sticker-name">youtube</span>
+        </a>
+      </div>
+
+      <canvas class="spray-canvas" id="sprayCanvas"></canvas>
+    </div>
+
+    <div class="spray-ui" id="sprayUI">
+      <div class="caps" role="radiogroup" aria-label="Spray color">
+        <button class="cap is-on" data-color="#ff3fa4" style="--c:#ff3fa4" aria-label="pink" role="radio" aria-checked="true"></button>
+        <button class="cap" data-color="#f5f1e6" style="--c:#f5f1e6" aria-label="white" role="radio" aria-checked="false"></button>
+        <button class="cap" data-color="#e0231b" style="--c:#e0231b" aria-label="red" role="radio" aria-checked="false"></button>
+        <button class="cap" data-color="#f2a33a" style="--c:#f2a33a" aria-label="orange" role="radio" aria-checked="false"></button>
+        <button class="cap" data-color="#2bd4ff" style="--c:#2bd4ff" aria-label="cyan" role="radio" aria-checked="false"></button>
+        <button class="cap" data-color="#0a0a0a" style="--c:#0a0a0a" aria-label="black" role="radio" aria-checked="false"></button>
+      </div>
+      <div class="spray-size">
+        <label for="capSize">cap</label>
+        <input id="capSize" type="range" min="10" max="60" value="26">
+      </div>
+      <button class="osd-btn" id="pickCan" type="button" aria-pressed="false">pick up can</button>
+      <button class="osd-btn" id="buffWall" type="button">buff the wall</button>
+    </div>
+  </section>
+
+  <!-- ARCHIVE -->
+  <section class="archive" id="archive">
+    <header class="sec-head">
+      <h2 class="sprayed">archive</h2>
+      <p><span id="archiveCount">390</span> frames. every one of them is film. click to play back.</p>
+      <div class="archive-filter" id="archiveFilter" role="group" aria-label="Filter archive"></div>
+    </header>
+    <div class="sheet" id="sheet"></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <h2 class="sprayed">book a roll</h2>
+    <p class="contact-lede">events, shows, portraits, music video. anywhere there's a night.</p>
+    <a class="contact-mail" href="mailto:hello@lifeonnfilmm.xyz">hello@lifeonnfilmm.xyz</a>
+    <ul class="contact-links">
+      <li><a href="#" data-social="instagram" target="_blank" rel="me noopener">instagram</a></li>
+      <li><a href="#" data-social="x" target="_blank" rel="me noopener">x</a></li>
+      <li><a href="#" data-social="youtube" target="_blank" rel="me noopener">youtube</a></li>
+    </ul>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+    <footer class="foot">
+      <span>&copy; <span id="year">2026</span> lifeonnfilmm</span>
+      <span class="hud-dim">press N for night mode</span>
+    </footer>
+  </section>
+
+</main>
+
+<!-- LIGHTBOX / PLAYBACK -->
+<div class="playback" id="playback" role="dialog" aria-modal="true" aria-label="Photo playback" hidden>
+  <div class="pb-img-wrap"><img id="pbImg" alt=""></div>
+  <div class="pb-osd pb-top">
+    <span class="pb-play"><b>&#9654;</b> PLAY</span>
+    <button class="pb-close" id="pbClose" type="button" aria-label="Close">STOP &#9632;</button>
+  </div>
+  <div class="pb-osd pb-bottom">
+    <span id="pbCount">FRAME 01 / 83</span>
+    <span id="pbCap">light it</span>
+    <span id="pbChap" class="hud-dim">after dark</span>
+  </div>
+  <button class="pb-nav pb-prev" id="pbPrev" type="button" aria-label="Previous">&#9664;&#9664;</button>
+  <button class="pb-nav pb-next" id="pbNext" type="button" aria-label="Next">&#9654;&#9654;</button>
+</div>
+
+<script src="js/photos.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
