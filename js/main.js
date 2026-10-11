@@ -11,9 +11,9 @@
 
   /* ---------- social links: fill these in ---------- */
   const SOCIAL = {
-    instagram: '',   // e.g. 'https://instagram.com/lifeonnfilmm'
-    x: '',           // e.g. 'https://x.com/lifeonnfilmm'
-    youtube: ''      // e.g. 'https://youtube.com/@lifeonnfilmm'
+    instagram: 'https://www.instagram.com/lifeonnfilmm/',
+    x: 'https://x.com/tarekmou333',
+    youtube: 'https://www.youtube.com/@lifeonnfilm'
   };
   $$('[data-social]').forEach(a => {
     const url = SOCIAL[a.dataset.social];
@@ -22,19 +22,18 @@
 
   /* ---------- chapters ---------- */
   const CHAPTER_LABEL = {
-    'yachty': 'lil yachty', 'after-dark': 'after dark', 'live': 'live', 'streets': 'streets', 'strays': 'strays',
+    'after-dark': 'after dark', 'live': 'live', 'streets': 'streets', 'strays': 'strays',
     'new-york': 'new york', 'new-orleans': 'new orleans', 'london': 'london', 'paris': 'paris', 'dublin': 'dublin',
     'elsewhere': 'elsewhere', 'sun': 'sun'
   };
   const ROLLS = [
-    { id: '01', title: 'lil yachty', chapters: ['yachty'], stock: 'LIFEONNFILMM 800' },
-    { id: '02', title: 'after dark', chapters: ['after-dark'], stock: 'LIFEONNFILMM 800' },
-    { id: '03', title: 'live', chapters: ['live'], stock: 'LIFEONNFILMM 1600' },
-    { id: '04', title: 'new york', chapters: ['new-york'], stock: 'LIFEONNFILMM 400' },
-    { id: '05', title: 'new orleans', chapters: ['new-orleans'], stock: 'LIFEONNFILMM 400' },
-    { id: '06', title: 'urbans', chapters: ['london', 'paris', 'dublin', 'elsewhere'], stock: 'LIFEONNFILMM 400' },
-    { id: '07', title: 'streets', chapters: ['streets', 'strays'], stock: 'LIFEONNFILMM 200' },
-    { id: '08', title: 'sun', chapters: ['sun'], stock: 'LIFEONNFILMM 100' }
+    { id: '01', title: 'after dark', chapters: ['after-dark'], stock: 'LIFEONNFILMM 800' },
+    { id: '02', title: 'live', chapters: ['live'], stock: 'LIFEONNFILMM 1600' },
+    { id: '03', title: 'new york', chapters: ['new-york'], stock: 'LIFEONNFILMM 400' },
+    { id: '04', title: 'new orleans', chapters: ['new-orleans'], stock: 'LIFEONNFILMM 400' },
+    { id: '05', title: 'urbans', chapters: ['london', 'paris', 'dublin', 'elsewhere'], stock: 'LIFEONNFILMM 400' },
+    { id: '06', title: 'streets', chapters: ['streets', 'strays'], stock: 'LIFEONNFILMM 200' },
+    { id: '07', title: 'sun', chapters: ['sun'], stock: 'LIFEONNFILMM 100' }
   ];
 
   /* ---------- boot ---------- */
@@ -151,7 +150,7 @@
   });
   $('#archiveCount').textContent = P.length;
   const filt = $('#archiveFilter');
-  const chaps = ['all', ...new Set(P.map(p => p.chapter))];
+  const chaps = ['all', ...ROLLS.flatMap(r => r.chapters).filter(c => P.some(p => p.chapter === c))];
   chaps.forEach(c => {
     const b = document.createElement('button'); b.type = 'button'; b.textContent = c === 'all' ? `all ${P.length}` : `${CHAPTER_LABEL[c] || c} ${P.filter(p => p.chapter === c).length}`; b.dataset.c = c; if (c === 'all') b.classList.add('is-on');
     b.addEventListener('click', () => {
