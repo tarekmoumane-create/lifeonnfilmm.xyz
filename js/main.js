@@ -169,14 +169,27 @@
     if (glitch && !reduce) { void pbImg.offsetWidth; pbImg.classList.add('glitch'); }
     pbCount.textContent = `FRAME ${pad(p.id)} / ${P.length}`; pbCap.textContent = p.caption; pbChap.textContent = CHAPTER_LABEL[p.chapter] || p.chapter;
     [1, -1].forEach(d => { const n = order[(pbi + d + order.length) % order.length]; new Image().src = FULL(n); });
+    history.replaceState(null, '', '#f/' + p.slug);
   }
+  const shareBtn = $('#pbShare'); let shareTimer = 0;
+  const photoLink = p => `${location.origin}${location.pathname}#f/${p.slug}`;
+  async function sharePB() {
+    const p = order[pbi], url = photoLink(p);
+    const done = txt => { shareBtn.textContent = txt; shareBtn.classList.add('is-done'); clearTimeout(shareTimer); shareTimer = setTimeout(() => { shareBtn.innerHTML = 'SHARE &#8599;'; shareBtn.classList.remove('is-done'); }, 1800); };
+    if (navigator.share && !fine) {
+      try { await navigator.share({ title: 'lifeonnfilmm', text: p.caption, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); flash(); done('LINK COPIED'); }
+    catch (e) { window.prompt('copy this link', url); }
+  }
+  shareBtn.addEventListener('click', sharePB);
   function openPB(id) {
     const visible = $$('.cell:not(.is-hidden)').map(c => +c.dataset.id);
     order = visible.includes(id) && visible.length < P.length ? P.filter(p => visible.includes(p.id)) : P;
     flash(); lastFocus = document.activeElement; pb.hidden = false; document.body.classList.add('pb-open');
     render(order.findIndex(p => p.id === id), false); $('#pbClose').focus();
   }
-  function closePB() { pb.hidden = true; document.body.classList.remove('pb-open'); if (lastFocus) lastFocus.focus(); }
+  function closePB() { pb.hidden = true; document.body.classList.remove('pb-open'); history.replaceState(null, '', location.pathname + location.search); if (lastFocus) lastFocus.focus(); }
   $('#pbClose').addEventListener('click', closePB);
   $('#pbNext').addEventListener('click', () => render(pbi + 1));
   $('#pbPrev').addEventListener('click', () => render(pbi - 1));
@@ -188,6 +201,13 @@
   let tx0 = null;
   pb.addEventListener('touchstart', e => tx0 = e.touches[0].clientX, { passive: true });
   pb.addEventListener('touchend', e => { if (tx0 == null) return; const dx = e.changedTouches[0].clientX - tx0; if (Math.abs(dx) > 40) render(pbi + (dx < 0 ? 1 : -1)); tx0 = null; });
+
+  // deep link: lifeonnfilmm.xyz/#f/<slug> opens that frame
+  function openFromHash() {
+    const m = location.hash.match(/^#f\/([\w-]+)$/); if (!m) return;
+    const p = P.find(x => x.slug === m[1]); if (p) { $$('.cell').forEach(c => c.classList.remove('is-hidden')); openPB(p.id); }
+  }
+  addEventListener('hashchange', openFromHash);
 
   /* ---------- wall: posters ---------- */
   const posters = $('#posters');
@@ -294,4 +314,6 @@
 
   /* ---------- flash on photo clicks anywhere ---------- */
   document.addEventListener('click', e => { if (e.target.closest('.cell,.frame,.poster')) flash(); });
+
+  openFromHash();
 })();

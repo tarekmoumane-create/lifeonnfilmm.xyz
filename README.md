@@ -54,3 +54,9 @@ Hosted on Vercel, project `lifeonnfilmm`, domain lifeonnfilmm.xyz (GoDaddy). Fro
 
 `vercel.json` sets long cache headers on /img. `.vercelignore` keeps tools and the manifest out
 of the upload.
+
+## Sharing
+
+Every frame has a link: `https://lifeonnfilmm.xyz/#f/<slug>` (the SHARE button in playback copies
+it, or opens the native share sheet on phones). Opening that link loads the site with the frame in
+playback. Links use the slug, not the archive number, so they survive re-cuts.
