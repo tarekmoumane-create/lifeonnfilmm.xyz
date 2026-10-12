@@ -37,12 +37,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* ---------- boot ---------- */
 .boot{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;transition:opacity .35s ease, visibility .35s}
 .boot.done{opacity:0;visibility:hidden}
-.boot-text{display:grid;gap:.4em;text-align:center;color:var(--night);font-size:clamp(28px,5vw,56px);line-height:1}
+.boot-text{display:grid;gap:.4em;text-align:center;color:var(--pink);font-size:clamp(28px,5vw,56px);line-height:1}
 .boot-line{display:block;animation:bootin .25s steps(2) both}
 .boot-play{color:var(--bone);animation:blink 1s steps(2) infinite}
-.boot-play b{color:var(--night);font-weight:400}
-.boot-bar{position:absolute;left:50%;bottom:18vh;width:min(60vw,320px);height:4px;transform:translateX(-50%);background:rgba(156,255,87,.2)}
-.boot-bar i{display:block;height:100%;width:0;background:var(--night);animation:load 1.1s steps(12) forwards}
+.boot-play b{color:var(--pink);font-weight:400}
+.boot-bar{position:absolute;left:50%;bottom:18vh;width:min(60vw,320px);height:4px;transform:translateX(-50%);background:rgba(255,63,164,.22)}
+.boot-bar i{display:block;height:100%;width:0;background:var(--pink);animation:load 1.1s steps(12) forwards}
 @keyframes load{to{width:100%}}
 @keyframes blink{50%{opacity:0}}
 @keyframes bootin{from{opacity:0;transform:translateY(4px)}}
