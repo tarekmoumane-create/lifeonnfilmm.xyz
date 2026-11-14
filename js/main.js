@@ -240,13 +240,13 @@
   // l/t = position (% of wall), w = width (vw), r = tilt (deg), zoom = crop in {s: scale, x/y: focus %}
   // m = phone position {l, t, w}; posters without m stay off the wall on phones (the x sticker fills the middle)
   const posterPicks = [
-    { slug: 'smile',          l: 22, t: 5,  w: 20, r: -4 },
+    { slug: 'r4451-102',      l: 22, t: 5,  w: 20, r: -4 },
     { slug: 'shirtless-jump', l: 50, t: 4,  w: 17, r: 3 },
-    { slug: 'r4451-102',      l: 2,  t: 42, w: 19, r: 5 },
+    { slug: 'smile',          l: 2,  t: 42, w: 19, r: 5 },
     { slug: 'concrete-034',   l: 25, t: 44, w: 19, r: -2, zoom: { s: 1.75, x: 52, y: 40 }, m: { l: 50, t: 3, w: 46 } },
-    { slug: 'r9637-067',      l: 64, t: 46, w: 19, r: 4 },
+    { slug: 'r5617-021',      l: 64, t: 46, w: 19, r: 4,  m: { l: 54, t: 66, w: 42 } },
     { slug: 'r239-057',       l: 47, t: 46, w: 15, r: -6, m: { l: 1, t: 58, w: 40 } },
-    { slug: 'r5617-021',      l: 68, t: 72, w: 14, r: -3, m: { l: 54, t: 66, w: 42 } },
+    { slug: 'r9637-067',      l: 68, t: 72, w: 14, r: -3 },
     { slug: 'r5618-005',      l: 87, t: 46, w: 10, r: 6,  m: { l: 0, t: 27, w: 24 } }
   ];
   posterPicks.forEach(L => {
