@@ -237,18 +237,27 @@
 
   /* ---------- wall: posters ---------- */
   const posters = $('#posters');
-  const posterPicks = ['cats-graffiti', 'yachty-011', 'boykot', 'concrete-034', 'phonebooths', 'pool-party', 'r5617-021', 'playboy', 'girls-walking', 'yachty-026'];
-  const layout = [
-    { l: 22, t: 6, w: 23, r: -4 }, { l: 50, t: 4, w: 17, r: 3 }, { l: 2, t: 42, w: 19, r: 5 },
-    { l: 26, t: 44, w: 17, r: -2 }, { l: 66, t: 48, w: 19, r: 4 }, { l: 46, t: 40, w: 15, r: -6 },
-    { l: 80, t: 6, w: 15, r: -3 }, { l: 10, t: 72, w: 16, r: 2 }, { l: 72, t: 76, w: 20, r: -5 }, { l: 60, t: 22, w: 13, r: 6 }
+  // l/t = position (% of wall), w = width (vw), r = tilt (deg), zoom = crop in {s: scale, x/y: focus %}
+  // m = phone position {l, t, w}; posters without m stay off the wall on phones (the x sticker fills the middle)
+  const posterPicks = [
+    { slug: 'smile',          l: 22, t: 5,  w: 20, r: -4 },
+    { slug: 'shirtless-jump', l: 50, t: 4,  w: 17, r: 3 },
+    { slug: 'r4451-102',      l: 2,  t: 42, w: 19, r: 5 },
+    { slug: 'concrete-034',   l: 25, t: 44, w: 19, r: -2, zoom: { s: 1.75, x: 52, y: 40 }, m: { l: 50, t: 3, w: 46 } },
+    { slug: 'r9637-067',      l: 64, t: 46, w: 19, r: 4 },
+    { slug: 'r239-057',       l: 47, t: 46, w: 15, r: -6, m: { l: 1, t: 58, w: 40 } },
+    { slug: 'r5617-021',      l: 68, t: 72, w: 14, r: -3, m: { l: 54, t: 66, w: 42 } },
+    { slug: 'r5618-005',      l: 87, t: 46, w: 10, r: 6,  m: { l: 0, t: 27, w: 24 } }
   ];
-  posterPicks.forEach((slug, i) => {
-    const p = P.find(x => x.slug === slug); if (!p) return; const L = layout[i];
-    const d = document.createElement('button'); d.type = 'button'; d.className = 'poster'; d.dataset.id = p.id;
-    d.style.cssText = `left:${L.l}%;top:${L.t}%;--w:${L.w}vw;--r:${L.r}deg`;
+  posterPicks.forEach(L => {
+    const p = P.find(x => x.slug === L.slug); if (!p) return; const z = L.zoom, m = L.m;
+    const d = document.createElement('button'); d.type = 'button'; d.className = m ? 'poster' : 'poster poster-desk'; d.dataset.id = p.id;
+    d.style.cssText = `--l:${L.l}%;--t:${L.t}%;--w:${L.w}vw;--r:${L.r}deg` + (m ? `;--ml:${m.l}%;--mt:${m.t}%;--mw:${m.w}vw` : '');
     d.setAttribute('aria-label', `${p.caption}, frame ${p.id}`);
-    d.innerHTML = `<img src="${THUMB(p)}" alt="${p.caption}" loading="lazy"><span class="poster-tag">${pad(p.id)} ${p.caption}</span>`;
+    const img = z
+      ? `<span class="poster-crop"><img src="${FULL(p)}" alt="${p.caption}" loading="lazy" style="transform:scale(${z.s});transform-origin:${z.x}% ${z.y}%"></span>`
+      : `<img src="${THUMB(p)}" alt="${p.caption}" loading="lazy">`;
+    d.innerHTML = `${img}<span class="poster-tag">${pad(p.id)} ${p.caption}</span>`;
     d.addEventListener('click', () => openPB(p.id));
     posters.appendChild(d);
   });
