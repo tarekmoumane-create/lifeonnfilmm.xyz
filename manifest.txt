@@ -10,7 +10,6 @@ TarekMouma005064/TarekMouma005064-R1-034-15A.jpg | concrete-034 | live | yachty,
 Tarek009637/Tarek009637-R1-005.jpg | r9637-005 | after-dark | captains | 0
 TarekMouma005063/TarekMouma005063-R1-013-5.jpg | r5063-013 | after-dark | five | 0
 Tarek009637/Tarek009637-R1-036.jpg | r9637-036 | after-dark | smile | 0
-TarekMouma004451/TarekMouma004451-R1-039.jpg | r4451-039 | after-dark | the lineup | 0
 00009612/000096120006.jpg | deer | after-dark | deer | 0
 00009613/000096130004.jpg | fingers | after-dark | hello | 0
 torekmoama000695/torekmoama000695-R1-003.jpg | birthday | after-dark | candles | 0
@@ -18,9 +17,7 @@ TarekMouma005063/TarekMouma005063-R1-045-21.jpg | r5063-045 | after-dark | glass
 Tarek009637/Tarek009637-R1-105.jpg | r9637-105 | after-dark | the booth | 0
 46/0-23.jpg | dancer | after-dark | dancer | 0
 Tarek009637/Tarek009637-R1-031.jpg | r9637-031 | after-dark | red | 0
-0445/000060170010.jpg | playboy | after-dark | neon bunny | 0
 00000444/000004440005.jpg | dancing-girl | after-dark | dance | 0
-TarekMouma005063/TarekMouma005063-R1-071-34.jpg | r5063-071 | after-dark | red light | 0
 Tarek009637/Tarek009637-R1-102.jpg | r9637-102 | after-dark | crowd | 0
 TarekMouma004451/TarekMouma004451-R1-046.jpg | r4451-046 | after-dark | kappa | 0
 TarekMouma005063/TarekMouma005063-R1-033-15.jpg | r5063-033 | after-dark | the squad | 0
@@ -43,7 +40,6 @@ Tarek009637/Tarek009637-R1-037.jpg | r9637-037 | after-dark | yuengling | 0
 00000444/000004440025.jpg | piggyback | after-dark | piggyback | 0
 TarekMouma005063/TarekMouma005063-R1-017-7.jpg | r5063-017 | after-dark | three | 0
 torekmoama000695/torekmoama000695-R1-011.jpg | two-smiles | after-dark | two smiles | 0
-TarekMouma004451/TarekMouma004451-R1-040.jpg | r4451-040 | after-dark | the lineup ii | 0
 Tarek009637/Tarek009637-R1-017.jpg | r9637-017 | after-dark | the table | 0
 TarekMouma005063/TarekMouma005063-R1-051-24.jpg | r5063-051 | after-dark | pointing | 0
 Tarek009637/Tarek009637-R1-058.jpg | r9637-058 | after-dark | blur | 0
@@ -120,7 +116,6 @@ TarekMouma005063/TarekMouma005063-R1-019-8.jpg | r5063-019 | after-dark | the ba
 00009613/000096130038.jpg | neon-cage | after-dark | cage | 0
 TarekMouma004451/TarekMouma004451-R1-051.jpg | r4451-051 | after-dark | pile | 0
 Tarek009637/Tarek009637-R1-009.jpg | r9637-009 | after-dark | crew | 0
-TarekMouma005063/TarekMouma005063-R1-053-25.jpg | r5063-053 | after-dark | pointing ii | 0
 Tarek009637/Tarek009637-R1-042.jpg | r9637-042 | after-dark | blue room ii | 0
 torekmoama000694/torekmoama000694-R1-002.jpg | crowd-cheer | live | front row | 0
 tarek005421_yachty/tarek005421-R1-001.jpg | yachty-001 | live | yachty + crew | 0
@@ -179,7 +174,6 @@ tarekm000239/tarekm000239-R1-005-1.jpg | r239-005 | new-york | the park | 0
 tarekm000239/tarekm000239-R1-031-14.jpg | r239-031 | new-york | the bar | 0
 TarekMouma004451/TarekMouma004451-R1-061.jpg | r4451-061 | new-york | self portrait | 0
 tarekm000239/tarekm000239-R1-059-28.jpg | r239-059 | new-york | washington square | 0
-tarekm000239/tarekm000239-R1-013-5.jpg | r239-013 | new-york | the court ii | 0
 tarekm000239/tarekm000239-R1-039-18.jpg | r239-039 | new-york | dumbo | 0
 TarekMouma004451/TarekMouma004451-R1-073.jpg | r4451-073 | new-york | the arch | 0
 tarekm000239/tarekm000239-R1-067-32.jpg | r239-067 | new-york | the court v | 0
@@ -218,7 +212,6 @@ tarekm000239/tarekm000239-R1-061-29.jpg | r239-061 | new-york | the court iii | 
 TarekMouma004451/TarekMouma004451-R1-066.jpg | r4451-066 | new-york | the corner | 0
 tarekm000239/tarekm000239-R1-015-6.jpg | r239-015 | new-york | megaphone | 0
 tarekm000239/tarekm000239-R1-041-19.jpg | r239-041 | new-york | dumbo ii | 0
-tarekm000239/tarekm000239-R1-069-33.jpg | r239-069 | new-york | the walk | 0
 TarekMouma004451/TarekMouma004451-R1-079.jpg | r4451-079 | new-york | stickers | 0
 tarekm000239/tarekm000239-R1-023-10.jpg | r239-023 | new-york | the river | 0
 TarekMouma005618/TarekMouma005618-R1-001.jpg | r5618-001 | new-orleans | peace | 0
@@ -236,13 +229,11 @@ TarekMouma005618/TarekMouma005618-R1-003.jpg | r5618-003 | new-orleans | the gir
 TarekMouma005617/TarekMouma005617-R1-016.jpg | r5617-016 | new-orleans | shades | 0
 TarekMouma005617/TarekMouma005617-R1-027.jpg | r5617-027 | new-orleans | shoes ii | 0
 TarekMouma005617/TarekMouma005617-R1-012.jpg | r5617-012 | new-orleans | the humvee | 0
-TarekMouma005618/TarekMouma005618-R1-023.jpg | r5618-023 | new-orleans | the ear | 0
 TarekMouma005617/TarekMouma005617-R1-023.jpg | r5617-023 | new-orleans | the yard iii | 0
 TarekMouma005618/TarekMouma005618-R1-008.jpg | r5618-008 | new-orleans | hair | 0
 TarekMouma005618/TarekMouma005618-R1-019.jpg | r5618-019 | new-orleans | the room ii | 0
 TarekMouma005617/TarekMouma005617-R1-019.jpg | r5617-019 | new-orleans | upside down | 0
 TarekMouma005618/TarekMouma005618-R1-004.jpg | r5618-004 | new-orleans | the yard | 0
-TarekMouma005617/TarekMouma005617-R1-003.jpg | r5617-003 | new-orleans | the stoop | 0
 TarekMouma005618/TarekMouma005618-R1-013.jpg | r5618-013 | new-orleans | two | 0
 TarekMouma005617/TarekMouma005617-R1-015.jpg | r5617-015 | new-orleans | beads ii | 0
 TarekMouma005617/TarekMouma005617-R1-026.jpg | r5617-026 | new-orleans | shoes | 0
@@ -315,7 +306,6 @@ tarekm000240/tarekm000240-R1-E011.jpg | r240-011 | paris | the boat | 0
 00000441/000004410013.jpg | ferris | elsewhere | ferris wheel | 0
 Tarek009637/Tarek009637-R1-070.jpg | r9637-070 | elsewhere | the bridge | 0
 TarekMouma004451/TarekMouma004451-R1-003.jpg | r4451-003 | london | rope | 0
-TarekMouma004451/TarekMouma004451-R1-012.jpg | r4451-012 | london | coke street | 0
 Tarek009637/Tarek009637-R1-087.jpg | r9637-087 | elsewhere | bocce | 0
 TarekMouma004451/TarekMouma004451-R1-029.jpg | r4451-029 | elsewhere | coca cola | 0
 46/0-14.jpg | crowd-pink | dublin | the george | 0
@@ -367,7 +357,6 @@ TarekMouma004451/TarekMouma004451-R1-089.jpg | r4451-089 | sun | float | 0
 0445/000060170003.jpg | beach-ball | sun | beach ball | 0
 TarekMouma004451/TarekMouma004451-R1-110.jpg | r4451-110 | sun | laugh | 0
 torekmoama000694/torekmoama000694-R1-028.jpg | pool-party-ii | sun | pool party ii | 0
-TarekMouma004451/TarekMouma004451-R1-095.jpg | r4451-095 | sun | thumbs up | 0
 bellowsfilmlabatl_00009612_2025-10-05_2117/00009610/000096100012.jpg | fence-trio | sun | fence | 0
 TarekMouma004451/TarekMouma004451-R1-090.jpg | r4451-090 | sun | float ii | 0
 0445/000060170012.jpg | sea-table | sun | table by the sea | 0

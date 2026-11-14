@@ -34,7 +34,7 @@ Edit it (remove lines to cut photos, add lines to add them), then from this fold
 That re-exports `img/full` + `img/thumb` and rewrites `js/photos.js`.
 
 ## State as of Oct 11 2026
-- 372 frames, 8 rolls: lil yachty, after dark, live, new york, new orleans, urbans, streets, sun
+- 361 frames, 8 rolls: lil yachty, after dark, live, new york, new orleans, urbans, streets, sun
 - All film scans live in `~/Desktop/pics` (24 rolls)
 - Still placeholder: social URLs in `js/main.js`, email in `index.html`
 
