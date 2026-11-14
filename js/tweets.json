@@ -1,0 +1,71 @@
+{
+ "handle": "tarekmou333",
+ "name": "Tarek",
+ "avatar": "https://pbs.twimg.com/profile_images/2044534637150818304/cKAsn4g9_200x200.jpg",
+ "url": "https://x.com/tarekmou333",
+ "tweets": [
+  {
+   "id": "2108047570660638991",
+   "url": "https://x.com/tarekmou333/status/2108047570660638991",
+   "ms": 1791432681000,
+   "date": "2026-10-08T04:11:21.000Z",
+   "text": "Why is every meta ad trying to throw AirPods at me Rn for a demo?? Anyone else?",
+   "likes": 0,
+   "replies": 0,
+   "media": false,
+   "kind": "post"
+  },
+  {
+   "id": "2107579131806253304",
+   "url": "https://x.com/tarekmou333/status/2107579131806253304",
+   "ms": 1791320996000,
+   "date": "2026-10-06T21:09:56.000Z",
+   "text": "In need of a 3D printer in nyc, where do I go?",
+   "likes": 0,
+   "replies": 2,
+   "media": false,
+   "kind": "post"
+  },
+  {
+   "id": "2102907110518595839",
+   "url": "https://x.com/tarekmou333/status/2102907110518595839",
+   "ms": 1790207099000,
+   "date": "2026-09-23T23:44:59.000Z",
+   "text": "Muse AI for mass Instagram outreach btw",
+   "likes": 2,
+   "replies": 0,
+   "media": false,
+   "kind": "post"
+  },
+  {
+   "id": "2090483242788872488",
+   "url": "https://x.com/tarekmou333/status/2090483242788872488",
+   "ms": 1787245019000,
+   "date": "2026-08-20T16:56:59.000Z",
+   "text": "eptwts.com",
+   "likes": 2,
+   "replies": 0,
+   "media": false,
+   "kind": "quote",
+   "ref": {
+    "handle": "eptwts",
+    "name": "EP",
+    "text": "i extracted all the lessons from my 14,000 tweets & turned them into a browsable knowledge-base... you can read them here: eptwts.com",
+    "url": "https://x.com/eptwts/status/2090446797017592279"
+   }
+  },
+  {
+   "id": "2090266690508423291",
+   "url": "https://x.com/tarekmou333/status/2090266690508423291",
+   "ms": 1787193388000,
+   "date": "2026-08-20T02:36:28.000Z",
+   "text": "Who is else is on here between Claude prompts?",
+   "likes": 2,
+   "replies": 0,
+   "media": false,
+   "kind": "post"
+  }
+ ],
+ "fetched": "2026-10-12T04:24:00.241Z",
+ "snapshot": true
+}

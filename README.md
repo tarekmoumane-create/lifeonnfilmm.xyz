@@ -21,6 +21,15 @@ Chapters feed the four rolls (see `ROLLS` in `js/main.js`) and the archive filte
 
 To add a photo: drop a 1800px JPEG in `img/full/` and a 720px one in `img/thumb/` with the same filename, then add an entry to `js/photos.js`.
 
+## X sticker (live posts)
+The X sticker on the wall shows the latest posts from @tarekmou333. `api/tweets.js` is a tiny
+Vercel function that reads the public x.com profile page (no API key, no login) and returns JSON,
+cached at the edge for 10 minutes. `js/tweets.json` is a saved copy the page falls back to when
+the function is unreachable (plain `python3 -m http.server` has no /api, so it always uses the copy).
+To change the handle: `HANDLE` at the top of `api/tweets.js`, plus the link in `js/main.js` and the
+`@tarekmou333` label in `index.html`. If X ever changes its page and the feed goes blank, the sticker
+still links to the profile.
+
 ## Keys
 - `N` toggles night mode
 - Arrow keys / Esc in playback

@@ -20,6 +20,32 @@
     if (url) a.href = url; else a.addEventListener('click', e => { e.preventDefault(); flash(); });
   });
 
+  /* ---------- x sticker: latest posts ----------
+     /api/tweets (Vercel function, reads the public x.com profile) with js/tweets.json as the
+     offline / outage fallback. Renders the 2 latest posts. */
+  (() => {
+    const list = $('#xFeed'); if (!list) return;
+    const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+    const when = ms => {
+      const d = (Date.now() - ms) / 6e4;
+      if (d < 60) return `${Math.max(1, Math.round(d))}m ago`;
+      if (d < 60 * 24) return `${Math.round(d / 60)}h ago`;
+      if (d < 60 * 24 * 10) return `${Math.round(d / 1440)}d ago`;
+      const dt = new Date(ms); return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toLowerCase();
+    };
+    const render = data => {
+      const items = (data.tweets || []).slice(0, 2);
+      if (!items.length) { list.innerHTML = '<li class="xfeed-wait">nothing posted yet</li>'; return; }
+      list.innerHTML = items.map(t => {
+        const ref = t.ref ? `<span class="xfeed-ref"><b>${t.kind === 'repost' ? 'rt' : '&#8627;'} @${esc(t.ref.handle)}</b> ${esc(t.ref.text)}</span>` : '';
+        return `<li><a href="${esc(t.url)}" target="_blank" rel="noopener"><span class="xfeed-when">${when(t.ms)}</span>${t.text ? `<span class="xfeed-text">${esc(t.text)}</span>` : ''}${ref}</a></li>`;
+      }).join('');
+      $$('a', list).forEach(a => a.addEventListener('click', flash));
+    };
+    const get = async url => { const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); return r.json(); };
+    get('/api/tweets').catch(() => get('js/tweets.json')).then(render).catch(() => { list.innerHTML = '<li class="xfeed-wait">posts offline. tap the sticker.</li>'; });
+  })();
+
   /* ---------- chapters ---------- */
   const CHAPTER_LABEL = {
     'after-dark': 'after dark', 'live': 'live', 'streets': 'streets', 'strays': 'strays',
