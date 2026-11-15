@@ -1,62 +1,74 @@
 /* /api/tweets — recent posts for the X sticker on the wall.
-   Reads the public profile page at x.com (it ships the latest posts inline, no login needed)
+   Reads the public profile page at x.com (it ships the latest posts inline as JSON, no login needed)
    and returns a small JSON list. Cached at the edge for 10 min, stale copy served for a day
    if X is slow or down. No keys, no X API. */
 
 const HANDLE = 'tarekmou333';
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 
-const unesc = s => {
-  try { s = JSON.parse('"' + s + '"'); } catch { s = s.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\'); }
-  return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-};
+const unent = s => String(s || '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+// x.com inlines its GraphQL responses as escaped JSON strings: kind:"Result.Ok",value:"{\"data\":...}"
+function payloads(html) {
+  const out = [];
+  for (const m of html.matchAll(/kind:"Result\.Ok",value:"((?:[^"\\]|\\.)*)"/g)) {
+    try { out.push(JSON.parse(JSON.parse('"' + m[1] + '"'))); } catch {}
+  }
+  return out;
+}
+function* walk(o) {
+  if (!o || typeof o !== 'object') return;
+  yield o;
+  for (const v of Array.isArray(o) ? o : Object.values(o)) yield* walk(v);
+}
+const unwrap = r => (r && r.__typename === 'TweetWithVisibilityResults' ? r.tweet : r) || null;
+const firstKey = (o, re) => { for (const k of Object.keys(o || {})) if (re.test(k)) return o[k]; return null; };
+
+function tweet(r) {
+  r = unwrap(r); if (!r || !r.rest_id) return null;
+  const u = (r.core && r.core.user_results && r.core.user_results.result) || {};
+  const d = r.details || r.legacy || {};
+  let text = unent(d.full_text || '');
+  for (const e of r.url_entities || (r.legacy && r.legacy.entities && r.legacy.entities.urls) || []) if (e.url) text = text.split(e.url).join(e.display_url || e.expanded_url || '');
+  text = text.replace(/https?:\/\/t\.co\/\w+/g, '').replace(/[ \t]+\n/g, '\n').replace(/\s{2,}/g, ' ').trim();
+  const c = r.counts || r.legacy || {};
+  return {
+    id: r.rest_id,
+    author: (u.core && u.core.screen_name) || u.screen_name || (u.legacy && u.legacy.screen_name) || '',
+    name: unent((u.core && u.core.name) || (u.legacy && u.legacy.name) || ''),
+    avatar: (u.avatar && u.avatar.image_url) || null,
+    ms: +(d.created_at_ms || Date.parse(d.created_at) || 0),
+    text, rawRT: /^RT @/.test(d.full_text || ''),
+    likes: +(c.favorite_count || 0), replies: +(c.reply_count || 0),
+    media: !!((r.media_entities2 && r.media_entities2.length) || (r.legacy && r.legacy.entities && r.legacy.entities.media)),
+    quoted: unwrap(r.quoted_tweet_results && r.quoted_tweet_results.result),
+    reposted: unwrap((firstKey(r, /^retweeted.*_results$/) || {}).result)
+  };
+}
 
 function parse(html, handle) {
-  // t.co -> readable link text, from every url entity on the page
-  const links = {};
-  for (const m of html.matchAll(/display_url:"([^"]*)",expanded_url:"([^"]*)",indices:\$R\[\d+\]=\[\d+,\d+\],url:"(https:\/\/t\.co\/[^"]+)"/g)) links[m[3]] = { display: unesc(m[1]), href: unesc(m[2]) };
-  const mediaLinks = new Set([...html.matchAll(/media_url_https:"[^"]*"[^]*?url:"(https:\/\/t\.co\/[^"]+)"/g)].map(m => m[1]));
-
-  // every tweet wrapper, in document order
-  const wraps = [...html.matchAll(/rest_id:"(\d{15,})",result:\$R\[\d+\]=\{__isTweetResult/g)].map(m => ({ id: m[1], start: m.index, end: m.index + m[0].length }));
-  for (const w of wraps) {
-    // the body's own rest_id marks the end of this tweet's data (nested tweets sit before it)
-    const own = html.indexOf(`rest_id:"${w.id}"`, w.end);
-    w.bodyEnd = own > -1 ? own : Math.min(html.length, w.end + 12000);
-    const seg = html.slice(w.end, w.bodyEnd);
-    const ft = seg.match(/full_text:"((?:[^"\\]|\\.)*)"/), ca = seg.match(/created_at_ms:(\d+)/), sn = seg.match(/screen_name:"([^"]+)"/), nm = seg.match(/name:"((?:[^"\\]|\\.)*)",screen_name:/);
-    const likes = seg.match(/favorite_count:(\d+)/), replies = seg.match(/reply_count:(\d+)/);
-    w.text = ft ? unesc(ft[1]) : ''; w.ms = ca ? +ca[1] : 0; w.author = sn ? sn[1] : ''; w.name = nm ? unesc(nm[1]) : '';
-    w.likes = likes ? +likes[1] : 0; w.replies = replies ? +replies[1] : 0;
-    w.hasMedia = /media_url_https/.test(seg.slice(0, seg.search(/rest_id:"\d{15,}",result:\$R/) > -1 ? seg.search(/rest_id:"\d{15,}",result:\$R/) : seg.length));
-  }
-  const pretty = t => {
-    let s = t;
-    for (const [tco, l] of Object.entries(links)) s = s.split(tco).join(l.display);
-    s = s.replace(/https?:\/\/t\.co\/\w+/g, '').replace(/[ \t]+\n/g, '\n').replace(/\s{2,}/g, ' ').trim();
-    return s;
-  };
-  const out = [], seen = new Set();
-  for (let i = 0; i < wraps.length; i++) {
-    const w = wraps[i];
-    const parent = wraps.slice(0, i).find(p => w.start > p.start && w.start < p.bodyEnd);
-    if (parent) continue; // nested (quoted / reposted) tweet, handled by its parent
-    if (w.author.toLowerCase() !== handle.toLowerCase() || seen.has(w.id)) continue;
-    seen.add(w.id);
-    const child = wraps.slice(i + 1).find(c => c.start > w.start && c.start < w.bodyEnd);
-    const isRT = /^RT @/.test(w.text);
-    const item = { id: w.id, url: `https://x.com/${handle}/status/${w.id}`, ms: w.ms, date: new Date(w.ms).toISOString(), text: pretty(w.text), likes: w.likes, replies: w.replies, media: w.hasMedia, kind: 'post' };
-    if (child) {
-      item.kind = isRT ? 'repost' : 'quote';
-      item.ref = { handle: child.author, name: child.name, text: pretty(child.text), url: `https://x.com/${child.author}/status/${child.id}` };
-      if (isRT) { item.text = ''; item.url = item.ref.url; }
+  const lower = handle.toLowerCase(), out = [], seen = new Set();
+  let name = handle, avatar = null;
+  for (const p of payloads(html)) {
+    for (const o of walk(p)) {
+      if (typeof o.entry_id !== 'string' || !/^(tweet|profile-conversation)-/.test(o.entry_id)) continue;
+      const tr = [...walk(o)].find(x => x.tweet_results && x.tweet_results.result);
+      const t = tr && tweet(tr.tweet_results.result);
+      if (!t || seen.has(t.id) || t.author.toLowerCase() !== lower) continue;
+      seen.add(t.id);
+      if (t.name) name = t.name; if (t.avatar) avatar = t.avatar;
+      const item = { id: t.id, url: `https://x.com/${handle}/status/${t.id}`, ms: t.ms, date: new Date(t.ms).toISOString(), text: t.text, likes: t.likes, replies: t.replies, media: t.media, kind: 'post' };
+      const ref = tweet(t.reposted) || tweet(t.quoted);
+      if (ref) {
+        item.kind = t.reposted || t.rawRT ? 'repost' : 'quote';
+        item.ref = { handle: ref.author, name: ref.name, text: ref.text, url: `https://x.com/${ref.author}/status/${ref.id}` };
+        if (item.kind === 'repost') { item.text = ''; item.url = item.ref.url; }
+      }
+      out.push(item);
     }
-    out.push(item);
   }
   out.sort((a, b) => b.ms - a.ms);
-  const name = (html.match(/name:"((?:[^"\\]|\\.)*)",screen_name:"tarekmou333"/i) || [])[1];
-  const avatar = (html.match(/image_url:"(https:\/\/pbs\.twimg\.com\/profile_images\/[^"]+)"/) || [])[1];
-  return { handle, name: name ? unesc(name) : handle, avatar: avatar ? avatar.replace('_normal', '_200x200') : null, url: `https://x.com/${handle}`, tweets: out };
+  return { handle, name, avatar: avatar ? avatar.replace('_normal', '_200x200') : null, url: `https://x.com/${handle}`, tweets: out };
 }
 
 let last = null; // last good result for this instance

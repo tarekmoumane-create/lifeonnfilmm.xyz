@@ -5,67 +5,72 @@
  "url": "https://x.com/tarekmou333",
  "tweets": [
   {
-   "id": "2108047570660638991",
-   "url": "https://x.com/tarekmou333/status/2108047570660638991",
-   "ms": 1791432681000,
-   "date": "2026-10-08T04:11:21.000Z",
-   "text": "Why is every meta ad trying to throw AirPods at me Rn for a demo?? Anyone else?",
+   "id": "2121836385514704915",
+   "url": "https://x.com/tarekmou333/status/2121836385514704915",
+   "ms": 1794720190000,
+   "date": "2026-11-15T05:23:10.000Z",
+   "text": "Made an internal tool to download sfc in bulk (for free). I'm dropping it here for anyone who needs it.: video-bulk-downloader-site.vercel.app",
+   "likes": 0,
+   "replies": 0,
+   "media": true,
+   "kind": "post"
+  },
+  {
+   "id": "2121802512798032329",
+   "url": "https://x.com/tarekmou333/status/2121802512798032329",
+   "ms": 1794712114000,
+   "date": "2026-11-15T03:08:34.000Z",
+   "text": "Imagine having sm motion your affairs move markets",
    "likes": 0,
    "replies": 0,
    "media": false,
    "kind": "post"
   },
   {
-   "id": "2107579131806253304",
-   "url": "https://x.com/tarekmou333/status/2107579131806253304",
-   "ms": 1791320996000,
-   "date": "2026-10-06T21:09:56.000Z",
-   "text": "In need of a 3D printer in nyc, where do I go?",
+   "id": "2121095501286449386",
+   "url": "https://x.com/tarekmou333/status/2121095501286449386",
+   "ms": 1794543550000,
+   "date": "2026-11-13T04:19:10.000Z",
+   "text": "Who’s in NYC and wants to take my money in poker?",
+   "likes": 2,
+   "replies": 1,
+   "media": false,
+   "kind": "post"
+  },
+  {
+   "id": "2119200016372044272",
+   "url": "https://x.com/tarekmou333/status/2119200016372044272",
+   "ms": 1794091631000,
+   "date": "2026-11-07T22:47:11.000Z",
+   "text": "This is what meta ads manager feels like the first time you login…",
    "likes": 0,
-   "replies": 2,
+   "replies": 1,
    "media": false,
-   "kind": "post"
+   "kind": "quote",
+   "ref": {
+    "handle": "mindinpanic",
+    "name": "Volo",
+    "text": "i want to build a todo app that makes designers physically uncomfortable. which version should i ship? A or B?",
+    "url": "https://x.com/mindinpanic/status/2118804242651599341"
+   }
   },
   {
-   "id": "2102907110518595839",
-   "url": "https://x.com/tarekmou333/status/2102907110518595839",
-   "ms": 1790207099000,
-   "date": "2026-09-23T23:44:59.000Z",
-   "text": "Muse AI for mass Instagram outreach btw",
-   "likes": 2,
-   "replies": 0,
-   "media": false,
-   "kind": "post"
-  },
-  {
-   "id": "2090483242788872488",
-   "url": "https://x.com/tarekmou333/status/2090483242788872488",
-   "ms": 1787245019000,
-   "date": "2026-08-20T16:56:59.000Z",
-   "text": "eptwts.com",
-   "likes": 2,
+   "id": "2116234568818733462",
+   "url": "https://x.com/tarekmou333/status/2116234568818733462",
+   "ms": 1793384613000,
+   "date": "2026-10-30T18:23:33.000Z",
+   "text": "Quitting apps are inherently problematic:\nIf they’re any good —> customer quits the habit and churns\nIf they suck —> customer churns.",
+   "likes": 4,
    "replies": 0,
    "media": false,
    "kind": "quote",
    "ref": {
-    "handle": "eptwts",
-    "name": "EP",
-    "text": "i extracted all the lessons from my 14,000 tweets & turned them into a browsable knowledge-base... you can read them here: eptwts.com",
-    "url": "https://x.com/eptwts/status/2090446797017592279"
+    "handle": "Siron93",
+    "name": "Siro",
+    "text": "how did Unrot go from $200K to $40K???\nthat's an 80% drop in monthly revenue from Apr to Sept. I used to see this app everywhere. it lets you earn screen time by completing good habits. curious to know what happened",
+    "url": "https://x.com/Siron93/status/2116176115840778682"
    }
-  },
-  {
-   "id": "2090266690508423291",
-   "url": "https://x.com/tarekmou333/status/2090266690508423291",
-   "ms": 1787193388000,
-   "date": "2026-08-20T02:36:28.000Z",
-   "text": "Who is else is on here between Claude prompts?",
-   "likes": 2,
-   "replies": 0,
-   "media": false,
-   "kind": "post"
   }
  ],
- "fetched": "2026-10-12T04:24:00.241Z",
- "snapshot": true
+ "fetched": "2026-11-15T06:33:17.328Z"
 }
