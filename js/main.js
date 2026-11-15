@@ -361,7 +361,7 @@
   const hint = $('#sprayHint'), ghost = $('#ghostCan'), buffBtn = $('#buffWall');
   hint.textContent = fine ? 'click and drag on the wall to spray' : 'tap "pick up can", then drag on the wall to spray';
   const RECORDING = new URLSearchParams(location.search).has('record');
-  const DEMO_SPEED = 1.1; // replay runs a touch faster than it was recorded
+  const DEMO_SPEED = 1.21; // replay runs a touch faster than it was recorded
   const demo = { stopped: RECORDING || reduce, visible: false, raf: 0 };
   function takeOver() {
     if (demo.stopped) return; demo.stopped = true; cancelAnimationFrame(demo.raf);
