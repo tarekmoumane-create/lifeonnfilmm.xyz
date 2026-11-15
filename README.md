@@ -37,6 +37,12 @@ To record a new one: `python3 tools/record_server.py`, open http://127.0.0.1:877
 "save tag" (it writes js/tag.json), then deploy. Pauses longer than 1.5s are shortened. Delete js/tag.json to turn
 the replay off.
 
+## Background reel
+`img/bg/bully.mp4`, `strike.mp4`, `symposium.mp4` play back to back behind the page (muted, darkened; list in
+`js/main.js`, "background reel"). Re-encode new clips small and silent:
+
+    ffmpeg -i in.mp4 -an -vf "scale='min(960,iw)':-2,fps=30" -c:v libx264 -preset slow -crf 30 -pix_fmt yuv420p -movflags +faststart img/bg/name.mp4
+
 ## Keys
 - `N` toggles night mode
 - Arrow keys / Esc in playback

@@ -235,6 +235,21 @@
   }
   addEventListener('hashchange', openFromHash);
 
+  /* ---------- background reel ----------
+     img/bg/*.mp4 play back to back, forever, muted, behind everything. Reduced motion / data saver get the still. */
+  (() => {
+    const v = $('#bgReel'); if (!v) return;
+    const reel = ['img/bg/bully.mp4', 'img/bg/strike.mp4', 'img/bg/symposium.mp4'];
+    const saver = navigator.connection && navigator.connection.saveData;
+    if (reduce || saver) return;
+    let k = 0;
+    const load = () => { v.src = reel[k]; v.load(); const p = v.play(); if (p) p.catch(() => {}); };
+    v.addEventListener('ended', () => { k = (k + 1) % reel.length; load(); });
+    v.addEventListener('error', () => { k = (k + 1) % reel.length; setTimeout(load, 1000); });
+    v.addEventListener('playing', () => v.classList.add('on'));
+    v.muted = true; v.preload = 'auto'; load();
+  })();
+
   /* ---------- wall: posters ---------- */
   const posters = $('#posters');
   // l/t = position (% of wall), w = width (vw), r = tilt (deg), zoom = crop in {s: scale, x/y: focus %}
@@ -346,6 +361,7 @@
   const hint = $('#sprayHint'), ghost = $('#ghostCan'), buffBtn = $('#buffWall');
   hint.textContent = fine ? 'click and drag on the wall to spray' : 'tap "pick up can", then drag on the wall to spray';
   const RECORDING = new URLSearchParams(location.search).has('record');
+  const DEMO_SPEED = 1.1; // replay runs a touch faster than it was recorded
   const demo = { stopped: RECORDING || reduce, visible: false, raf: 0 };
   function takeOver() {
     if (demo.stopped) return; demo.stopped = true; cancelAnimationFrame(demo.raf);
@@ -373,7 +389,7 @@
       if (demo.stopped) return;
       const dt = Math.min(now - prev, 100); prev = now;
       if (demo.visible) {
-        clock += dt;
+        clock += dt * DEMO_SPEED;
         while (i < tl.length && tl[i][0] <= clock) {
           const e = tl[i++], k = e[1], s = sz * scale();
           if (k === 'd') { down = true; lastP = pt(e); puff(lastP.x, lastP.y, e[4] || .5, dctx, col, s); place(lastP); ghost.classList.add('down'); }
@@ -433,7 +449,9 @@
       const a = e.target.dataset && e.target.dataset.a; if (!a) return;
       if (a === 'reset') { R.events = []; R.t0 = 0; R.color = color; R.size = size; R.count.textContent = 0; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.restore(); msg.textContent = ''; return; }
       const body = JSON.stringify(pack());
-      try { const r = await fetch('/__tag', { method: 'POST', body }); if (!r.ok) throw 0; msg.textContent = 'saved to js/tag.json'; }
+      // /?record saves js/tag.json; /?record=name saves js/tag-name.json (a piece to splice in)
+      const name = (new URLSearchParams(location.search).get('record') || '').replace(/[^a-z0-9]/gi, '').toLowerCase(), file = name ? `tag-${name}.json` : 'tag.json';
+      try { const r = await fetch('/__tag?file=' + file, { method: 'POST', body }); if (!r.ok) throw 0; msg.textContent = 'saved to js/' + file; }
       catch { const a2 = document.createElement('a'); a2.href = URL.createObjectURL(new Blob([body], { type: 'application/json' })); a2.download = 'tag.json'; a2.click(); msg.textContent = 'downloaded tag.json'; }
     });
     window.__tag = R;
