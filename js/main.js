@@ -264,46 +264,48 @@
 
   /* ---------- wall: spray paint ---------- */
   const wallStage = $('#wallStage'), cv = $('#sprayCanvas'), ctx = cv.getContext('2d', { willReadFrequently: false });
+  const dcv = $('#demoCanvas'), dctx = dcv.getContext('2d');
   let color = '#ff3fa4', size = 26, spraying = false, last = null, dripTimer = null, dpr = Math.min(devicePixelRatio || 1, 2);
   function fit() {
     const r = wallStage.getBoundingClientRect(); const keep = cv.width ? ctx.getImageData(0, 0, cv.width, cv.height) : null;
     cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (keep) ctx.putImageData(keep, 0, 0);
+    dcv.width = cv.width; dcv.height = cv.height; dctx.setTransform(dpr, 0, 0, dpr, 0, 0); // replay restarts its loop clean
   }
   fit(); addEventListener('resize', fit);
   const pos = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
-  function puff(x, y, pressure = .5) {
-    const n = Math.round(size * 1.6); const rad = size / 2;
-    ctx.fillStyle = color; ctx.globalAlpha = .07 + pressure * .08;
+  function puff(x, y, pressure = .5, c = ctx, col = color, sz = size) {
+    const n = Math.round(sz * 1.6); const rad = sz / 2;
+    c.fillStyle = col; c.globalAlpha = .07 + pressure * .08;
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2, d = Math.sqrt(Math.random()) * rad * (1 + Math.random() * .1);
       const s = Math.random() < .9 ? 1 : 2.4;
-      ctx.beginPath(); ctx.arc(x + Math.cos(a) * d, y + Math.sin(a) * d, s, 0, Math.PI * 2); ctx.fill();
+      c.beginPath(); c.arc(x + Math.cos(a) * d, y + Math.sin(a) * d, s, 0, Math.PI * 2); c.fill();
     }
-    ctx.globalAlpha = .35; ctx.beginPath(); ctx.arc(x, y, rad * .35, 0, Math.PI * 2); ctx.fill();
-    ctx.globalAlpha = 1;
+    c.globalAlpha = .35; c.beginPath(); c.arc(x, y, rad * .35, 0, Math.PI * 2); c.fill();
+    c.globalAlpha = 1;
   }
-  function drip(x, y) {
-    let len = 0, target = size * (1.5 + Math.random() * 3), yy = y;
-    const step = () => { if (len > target || !spraying && len > target * .5) return; ctx.fillStyle = color; ctx.globalAlpha = .6; ctx.beginPath(); ctx.arc(x + (Math.random() - .5), yy, size * .09, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; yy += 1.4; len += 1.4; requestAnimationFrame(step); };
+  function drip(x, y, c = ctx, col = color, sz = size, on = () => spraying) {
+    let len = 0, target = sz * (1.5 + Math.random() * 3), yy = y;
+    const step = () => { if (len > target || !on() && len > target * .5) return; c.fillStyle = col; c.globalAlpha = .6; c.beginPath(); c.arc(x + (Math.random() - .5), yy, sz * .09, 0, Math.PI * 2); c.fill(); c.globalAlpha = 1; yy += 1.4; len += 1.4; requestAnimationFrame(step); };
     step();
   }
   const canUp = () => fine || wallStage.classList.contains('can-up');
   let armed = null, armTimer = null;
   const beginSpray = (e) => {
     spraying = true; armed = null; clearTimeout(armTimer);
-    last = pos(e); puff(last.x, last.y, e.pressure || .5);
+    last = pos(e); puff(last.x, last.y, e.pressure || .5); rec('d', last, e.pressure);
     clearInterval(dripTimer); dripTimer = setInterval(() => { if (spraying && last && Math.random() < .5) drip(last.x + (Math.random() - .5) * size * .6, last.y); }, 260);
   };
   cv.addEventListener('pointerdown', e => {
-    if (!canUp()) return; if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (!canUp()) return; takeOver(); if (e.pointerType === 'mouse' && e.button !== 0) return;
     cv.setPointerCapture(e.pointerId);
     armed = { x: e.clientX, y: e.clientY, t: performance.now(), e };
     armTimer = setTimeout(() => { if (armed) beginSpray(armed.e); }, 200);
   });
   cv.addEventListener('pointermove', e => {
     if (armed && !spraying) { if (Math.hypot(e.clientX - armed.x, e.clientY - armed.y) > 4) beginSpray(armed.e); else return; }
-    if (!spraying) return; const p = pos(e); const dx = p.x - last.x, dy = p.y - last.y, dist = Math.hypot(dx, dy), steps = Math.max(1, Math.round(dist / (size * .18)));
+    if (!spraying) { rec('h', pos(e)); return; } const p = pos(e); rec('m', p, e.pressure); const dx = p.x - last.x, dy = p.y - last.y, dist = Math.hypot(dx, dy), steps = Math.max(1, Math.round(dist / (size * .18)));
     for (let i = 1; i <= steps; i++) puff(last.x + dx * i / steps, last.y + dy * i / steps, e.pressure || .5);
     last = p;
   });
@@ -314,13 +316,13 @@
       if (under) { flash(); openPB(+under.dataset.id); }
     }
   });
-  const stop = () => { spraying = false; armed = null; clearTimeout(armTimer); clearInterval(dripTimer); };
-  cv.addEventListener('pointerup', stop); cv.addEventListener('pointercancel', stop); cv.addEventListener('pointerleave', stop);
+  const stop = () => { if (spraying) rec('u'); spraying = false; armed = null; clearTimeout(armTimer); clearInterval(dripTimer); };
+  cv.addEventListener('pointerup', stop); cv.addEventListener('pointercancel', stop); cv.addEventListener('pointerleave', e => { stop(); rec('l'); });
   cv.addEventListener('contextmenu', e => e.preventDefault());
-  $$('.cap').forEach(b => b.addEventListener('click', () => { color = b.dataset.color; $$('.cap').forEach(x => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-checked', x === b); }); }));
-  $('#capSize').addEventListener('input', e => { size = +e.target.value; cur.style.setProperty('--cap', size + 'px'); });
-  $('#pickCan').addEventListener('click', e => { const on = !wallStage.classList.contains('can-up'); wallStage.classList.toggle('can-up', on); e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'put can down' : 'pick up can'; });
-  $('#buffWall').addEventListener('click', () => { flash(); ctx.clearRect(0, 0, cv.width, cv.height); });
+  $$('.cap').forEach(b => b.addEventListener('click', () => { takeOver(); color = b.dataset.color; rec('c', null, null, color); $$('.cap').forEach(x => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-checked', x === b); }); }));
+  $('#capSize').addEventListener('input', e => { takeOver(); size = +e.target.value; rec('s', null, null, size); cur.style.setProperty('--cap', size + 'px'); });
+  $('#pickCan').addEventListener('click', e => { takeOver(); const on = !wallStage.classList.contains('can-up'); wallStage.classList.toggle('can-up', on); e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'put can down' : 'pick up can'; });
+  $('#buffWall').addEventListener('click', () => { takeOver(); rec('b'); flash(); ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.restore(); });
   // spray cursor while over the wall
   if (fine) {
     wallStage.addEventListener('pointerenter', () => { cur.classList.add('is-spray'); cur.style.setProperty('--cap', size + 'px'); });
@@ -336,6 +338,100 @@
     txt.forEach(([x, y, t], i) => { ctx.save(); ctx.translate(w * x, h * y); ctx.rotate(i ? .12 : -.06); ctx.fillStyle = i ? '#ff3fa4' : '#f5f1e6'; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10; ctx.fillText(t, 0, 0); ctx.restore(); });
     ctx.globalAlpha = 1; color = save.color; size = save.size;
   })();
+
+  /* ---------- wall: tag replay ----------
+     js/tag.json is a recorded session of the owner spraying the wall (record one at /?record).
+     It replays on a separate canvas on a loop so visitors see the wall being painted; the moment
+     a visitor sprays, picks a cap, picks up the can or buffs, the replay stops and its paint is wiped. */
+  const hint = $('#sprayHint'), ghost = $('#ghostCan'), buffBtn = $('#buffWall');
+  hint.textContent = fine ? 'click and drag on the wall to spray' : 'tap "pick up can", then drag on the wall to spray';
+  const RECORDING = new URLSearchParams(location.search).has('record');
+  const demo = { stopped: RECORDING || reduce, visible: false, raf: 0 };
+  function takeOver() {
+    if (demo.stopped) return; demo.stopped = true; cancelAnimationFrame(demo.raf);
+    dctx.save(); dctx.setTransform(1, 0, 0, 1, 0, 0); dctx.clearRect(0, 0, dcv.width, dcv.height); dctx.restore();
+    ghost.classList.remove('on'); hint.classList.add('done'); buffBtn.classList.remove('is-hint');
+  }
+  function clearDemo() { dctx.save(); dctx.setTransform(1, 0, 0, 1, 0, 0); dctx.clearRect(0, 0, dcv.width, dcv.height); dctx.restore(); }
+  function runDemo(tag) {
+    const ev = tag.events; if (!ev || !ev.length) return;
+    const end = ev[ev.length - 1][0];
+    // hold the finished piece, buff it, go again (a recording that already ends on a buff just restarts)
+    const tl = ev.concat(ev[ev.length - 1][1] === 'b' ? [[end + 1200, 'R']] : [[end + 3500, 'B'], [end + 4600, 'R']]);
+    let i, clock, prev, col, sz, down, lastP, lastDrip;
+    const reset = () => { i = 0; clock = -600; col = tag.color; sz = tag.size; down = false; lastP = null; lastDrip = 0; };
+    const W = () => dcv.width / dpr, H = () => dcv.height / dpr;
+    const scale = () => Math.max(.5, Math.min(W() / tag.w, H() / tag.h));
+    const pt = e => ({ x: e[2] * W(), y: e[3] * H() });
+    const place = p => { ghost.style.transform = `translate(${p.x}px,${p.y}px)`; ghost.style.setProperty('--cap', sz * scale() + 'px'); ghost.classList.add('on'); };
+    reset(); prev = performance.now();
+    const tick = now => {
+      if (demo.stopped) return;
+      const dt = Math.min(now - prev, 100); prev = now;
+      if (demo.visible) {
+        clock += dt;
+        while (i < tl.length && tl[i][0] <= clock) {
+          const e = tl[i++], k = e[1], s = sz * scale();
+          if (k === 'd') { down = true; lastP = pt(e); puff(lastP.x, lastP.y, e[4] || .5, dctx, col, s); place(lastP); ghost.classList.add('down'); }
+          else if (k === 'm' && down && lastP) {
+            const p = pt(e), dx = p.x - lastP.x, dy = p.y - lastP.y, n = Math.max(1, Math.round(Math.hypot(dx, dy) / (s * .18)));
+            for (let j = 1; j <= n; j++) puff(lastP.x + dx * j / n, lastP.y + dy * j / n, e[4] || .5, dctx, col, s);
+            lastP = p; place(p);
+          }
+          else if (k === 'h') place(pt(e));
+          else if (k === 'u') { down = false; ghost.classList.remove('down'); }
+          else if (k === 'l') ghost.classList.remove('on');
+          else if (k === 'c') col = e[2];
+          else if (k === 's') sz = e[2];
+          else if (k === 'b' || k === 'B') {
+            buffBtn.classList.remove('is-hint'); void buffBtn.offsetWidth; buffBtn.classList.add('is-hint');
+            dcv.classList.add('buffing'); setTimeout(() => { if (!demo.stopped) { clearDemo(); dcv.classList.remove('buffing'); } }, 550);
+            if (k === 'B') ghost.classList.remove('on');
+          }
+          else if (k === 'R') { reset(); break; }
+        }
+        if (down && lastP && clock - lastDrip > 260) { lastDrip = clock; if (Math.random() < .5) { const s = sz * scale(); drip(lastP.x + (Math.random() - .5) * s * .6, lastP.y, dctx, col, s, () => down && !demo.stopped); } }
+      }
+      demo.raf = requestAnimationFrame(tick);
+    };
+    demo.raf = requestAnimationFrame(tick);
+  }
+  if (!demo.stopped && 'IntersectionObserver' in window) {
+    let loaded = false;
+    new IntersectionObserver(([en]) => {
+      demo.visible = en.isIntersecting;
+      if (en.isIntersecting && !loaded) { loaded = true; fetch('js/tag.json').then(r => r.ok ? r.json() : null).then(t => { if (t && !demo.stopped) runDemo(t); }).catch(() => {}); }
+    }, { threshold: .2 }).observe(wallStage);
+  }
+
+  /* ---------- wall: record a tag (/?record) ----------
+     Logs every stroke as fractions of the wall size, so it replays at any screen size.
+     "save tag" writes js/tag.json through tools/record_server.py, or downloads it when that isn't running. */
+  const R = { on: RECORDING, t0: 0, events: [], color, size };
+  function rec(k, p, pr, v) {
+    if (!R.on) return; const now = performance.now(); if (!R.t0) R.t0 = now;
+    const w = cv.width / dpr, h = cv.height / dpr, t = Math.round(now - R.t0);
+    if (p) R.events.push([t, k, +(p.x / w).toFixed(4), +(p.y / h).toFixed(4)].concat(pr ? [+pr.toFixed(2)] : []));
+    else R.events.push(v === undefined ? [t, k] : [t, k, v]);
+    if (R.count) R.count.textContent = R.events.length;
+  }
+  if (RECORDING) {
+    const bar = document.createElement('div'); bar.className = 'rec-bar';
+    bar.innerHTML = '<span class="rec-dot"></span> recording tag · <b>0</b> events <button type="button" data-a="save">save tag</button><button type="button" data-a="reset">start over</button><span class="rec-msg"></span>';
+    document.body.appendChild(bar); R.count = $('b', bar); const msg = $('.rec-msg', bar);
+    const pack = () => { // squeeze long pauses so the replay keeps moving
+      let shift = 0, prevT = 0; const out = R.events.map(e => { const gap = e[0] - prevT; prevT = e[0]; if (gap > 1500) shift += gap - 1500; return [e[0] - shift].concat(e.slice(1)); });
+      return { w: Math.round(cv.width / dpr), h: Math.round(cv.height / dpr), color: R.color, size: R.size, events: out };
+    };
+    bar.addEventListener('click', async e => {
+      const a = e.target.dataset && e.target.dataset.a; if (!a) return;
+      if (a === 'reset') { R.events = []; R.t0 = 0; R.color = color; R.size = size; R.count.textContent = 0; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.restore(); msg.textContent = ''; return; }
+      const body = JSON.stringify(pack());
+      try { const r = await fetch('/__tag', { method: 'POST', body }); if (!r.ok) throw 0; msg.textContent = 'saved to js/tag.json'; }
+      catch { const a2 = document.createElement('a'); a2.href = URL.createObjectURL(new Blob([body], { type: 'application/json' })); a2.download = 'tag.json'; a2.click(); msg.textContent = 'downloaded tag.json'; }
+    });
+    window.__tag = R;
+  }
 
   /* ---------- marquee ---------- */
   const words = ['shot on 35mm', 'flash on', 'night mode', 'no digital', 'push two stops', 'rec ●', 'urbans', 'after dark', 'sun', 'lifeonnfilmm'];

@@ -30,6 +30,13 @@ To change the handle: `HANDLE` at the top of `api/tweets.js`, plus the link in `
 `@tarekmou333` label in `index.html`. If X ever changes its page and the feed goes blank, the sticker
 still links to the profile.
 
+## Wall tag replay
+`js/tag.json` is a recorded session of spraying the wall. It replays on a loop when visitors reach the wall
+(paint, buff, repeat); the moment a visitor sprays, picks a cap or buffs, the replay stops and its paint is wiped.
+To record a new one: `python3 tools/record_server.py`, open http://127.0.0.1:8777/?record#wall, spray, hit
+"save tag" (it writes js/tag.json), then deploy. Pauses longer than 1.5s are shortened. Delete js/tag.json to turn
+the replay off.
+
 ## Keys
 - `N` toggles night mode
 - Arrow keys / Esc in playback
