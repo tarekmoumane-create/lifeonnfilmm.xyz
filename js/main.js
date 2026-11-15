@@ -354,12 +354,16 @@
   }
   function clearDemo() { dctx.save(); dctx.setTransform(1, 0, 0, 1, 0, 0); dctx.clearRect(0, 0, dcv.width, dcv.height); dctx.restore(); }
   function runDemo(tag) {
-    const ev = tag.events; if (!ev || !ev.length) return;
+    if (!tag.events || !tag.events.length) return;
+    // start on the first stroke: drop the lead-in (hovering into place), keep any cap/color picks from it
+    const first = Math.max(0, tag.events.findIndex(e => e[1] === 'd')), lead = tag.events[first][0];
+    tag.events.slice(0, first).forEach(e => { if (e[1] === 'c') tag.color = e[2]; if (e[1] === 's') tag.size = e[2]; });
+    const ev = tag.events.slice(first).map(e => [e[0] - lead].concat(e.slice(1)));
     const end = ev[ev.length - 1][0];
     // hold the finished piece, buff it, go again (a recording that already ends on a buff just restarts)
     const tl = ev.concat(ev[ev.length - 1][1] === 'b' ? [[end + 1200, 'R']] : [[end + 3500, 'B'], [end + 4600, 'R']]);
     let i, clock, prev, col, sz, down, lastP, lastDrip;
-    const reset = () => { i = 0; clock = -600; col = tag.color; sz = tag.size; down = false; lastP = null; lastDrip = 0; };
+    const reset = () => { i = 0; clock = 0; col = tag.color; sz = tag.size; down = false; lastP = null; lastDrip = 0; };
     const W = () => dcv.width / dpr, H = () => dcv.height / dpr;
     const scale = () => Math.max(.5, Math.min(W() / tag.w, H() / tag.h));
     const pt = e => ({ x: e[2] * W(), y: e[3] * H() });
@@ -397,11 +401,13 @@
     demo.raf = requestAnimationFrame(tick);
   }
   if (!demo.stopped && 'IntersectionObserver' in window) {
-    let loaded = false;
+    // fetch the tag well before the wall scrolls in, and start painting the moment it shows
+    const tagReady = fetch('js/tag.json').then(r => r.ok ? r.json() : null).catch(() => null);
+    let started = false;
     new IntersectionObserver(([en]) => {
       demo.visible = en.isIntersecting;
-      if (en.isIntersecting && !loaded) { loaded = true; fetch('js/tag.json').then(r => r.ok ? r.json() : null).then(t => { if (t && !demo.stopped) runDemo(t); }).catch(() => {}); }
-    }, { threshold: .2 }).observe(wallStage);
+      if (en.isIntersecting && !started) { started = true; tagReady.then(t => { if (t && !demo.stopped) runDemo(t); }); }
+    }, { threshold: .05 }).observe(wallStage);
   }
 
   /* ---------- wall: record a tag (/?record) ----------
