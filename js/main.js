@@ -64,7 +64,7 @@
 
   /* ---------- boot ---------- */
   const boot = $('#boot');
-  const endBoot = () => { boot.classList.add('done'); setTimeout(() => boot.remove(), 400); };
+  const endBoot = () => { document.body.classList.remove('booting'); boot.classList.add('done'); setTimeout(() => boot.remove(), 400); };
   if (reduce || sessionStorage.getItem('booted')) endBoot();
   else { setTimeout(endBoot, 1500); boot.addEventListener('click', endBoot); }
   sessionStorage.setItem('booted', '1');
@@ -241,13 +241,13 @@
     const v = $('#bgReel'); if (!v) return;
     const reel = ['img/bg/bully.mp4', 'img/bg/strike.mp4', 'img/bg/symposium.mp4'];
     const saver = navigator.connection && navigator.connection.saveData;
-    if (reduce || saver) return;
-    let k = 0;
-    const load = () => { v.src = reel[k]; v.load(); const p = v.play(); if (p) p.catch(() => {}); };
+    if (reduce || saver) { v.pause(); v.removeAttribute('src'); v.load(); return; } // keep the still
+    let k = 0; // the first clip is already loading from the html, autoplaying
+    const play = () => { const p = v.play(); if (p) p.catch(() => {}); };
+    const load = () => { v.src = reel[k]; v.load(); play(); };
     v.addEventListener('ended', () => { k = (k + 1) % reel.length; load(); });
     v.addEventListener('error', () => { k = (k + 1) % reel.length; setTimeout(load, 1000); });
-    v.addEventListener('playing', () => v.classList.add('on'));
-    v.muted = true; v.preload = 'auto'; load();
+    v.muted = true; if (v.paused) play();
   })();
 
   /* ---------- wall: posters ---------- */

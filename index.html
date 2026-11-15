@@ -14,8 +14,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik+Spray+Paint&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="img/bg/poster.jpg" as="image">
 </head>
-<body>
+<body class="booting">
 
 <!-- SVG filters: spray edge for display type, static for night mode -->
 <svg class="defs" aria-hidden="true" focusable="false">
@@ -76,7 +77,7 @@
 <div class="scan" aria-hidden="true"></div>
 
 <!-- background reel: bully, strike, symposium on a loop behind the page -->
-<div class="bgreel" aria-hidden="true"><video id="bgReel" muted playsinline preload="metadata" poster="img/bg/poster.jpg"></video></div>
+<div class="bgreel" aria-hidden="true"><video id="bgReel" src="img/bg/bully.mp4" autoplay muted playsinline preload="auto" poster="img/bg/poster.jpg"></video></div>
 
 <main id="main">
 
