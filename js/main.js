@@ -239,7 +239,7 @@
      img/bg/*.mp4 play back to back, forever, muted, behind everything. Reduced motion / data saver get the still. */
   (() => {
     const v = $('#bgReel'); if (!v) return;
-    const reel = ['img/bg/bully.mp4', 'img/bg/strike.mp4', 'img/bg/symposium.mp4'];
+    const reel = ['img/bg/bully.mp4?v=2', 'img/bg/strike.mp4', 'img/bg/symposium.mp4?v=2'];
     const saver = navigator.connection && navigator.connection.saveData;
     if (reduce || saver) { v.pause(); v.removeAttribute('src'); v.load(); return; } // keep the still
     let k = 0; // the first clip is already loading from the html, autoplaying
