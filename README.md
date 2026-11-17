@@ -82,3 +82,20 @@ of the upload.
 Every frame has a link: `https://lifeonnfilmm.xyz/#f/<slug>` (the SHARE button in playback copies
 it, or opens the native share sheet on phones). Opening that link loads the site with the frame in
 playback. Links use the slug, not the archive number, so they survive re-cuts.
+
+## Phones (720px and narrower)
+
+Same tape and OSD, different interface (desktop is untouched):
+- **MENU** (top right) opens a camcorder settings screen: rolls / wall / archive / contact / night mode. Replaces the nav strip.
+- **The rolls ride a ferris wheel made of film.** One screen per roll: 12 frames hang off a sprocketed rim and stay
+  upright, the one at the top fills the gate. Swipe sideways to spin (it coasts and settles), tap a frame to bring it
+  up, tap the gate to play the roll, swipe the roll names to switch. Code: "rolls on phones: the reel wheel" in js/main.js.
+- **Archive** is a 4-column contact sheet showing 40 frames; `FF` reveals the rest (`SHEET_CUT` in js/main.js).
+- **Saving photos:** `img/save/` holds 3000px copies (quality 88, ~1.3MB each) made from the scans in ~/Desktop/pics.
+  `SAVE` in playback fetches that copy and opens the share sheet ("Save Image" = camera roll); desktop downloads it.
+  Holding a photo works too: once a visitor stays on a frame in playback or the wheel's gate for ~1s, the 3000px copy
+  swaps in quietly, so the hold menu saves it. Flicking through never loads it, data saver never does, and the site
+  falls back to the 1600px file if a save copy is missing. Thumbnails block the hold menu.
+  `img/save` is not in git (too big); it's rebuilt by `python3 tools/export.py --save-only` and uploaded by
+  `npx vercel deploy`. If you rebuild the photo set, the full export makes it too.
+- Swipe the hero sideways to change frames; swipe down in playback to close.

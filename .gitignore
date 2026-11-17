@@ -1,3 +1,5 @@
 .vercel
 .env*
 .claude
+# 3000px save copies (~480MB): rebuilt from ~/Desktop/pics by tools/export.py, uploaded by `vercel deploy`
+img/save/
